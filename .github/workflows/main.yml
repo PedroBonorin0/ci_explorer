@@ -1,0 +1,14 @@
+name: Trigger action
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_EN: ${{ secrets.TEST_ENV }}
+
+jobs:
+  install:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
