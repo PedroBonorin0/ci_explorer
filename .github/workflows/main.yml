@@ -2,6 +2,14 @@ name: Trigger action
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose environment to delete automation data'
+        required: true
+        type: choice
+        options:
+          - staging
+          - preprod
 
 env:
   SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
@@ -9,6 +17,8 @@ env:
 jobs:
   install:
     runs-on: ubuntu-22.04
+    environment: 
+      name: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,3 +26,4 @@ jobs:
         run: node index.js
         env:
           SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
