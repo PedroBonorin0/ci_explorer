@@ -25,4 +25,7 @@ jobs:
     steps:
       - uses: Wandalen/wretry.action@master
         with:
-          action: PedroBonorin0/ci_explorer@master
+          action: PedroBonorin0/ci_explorer/.github/workflows/main.yml@master
+          with: |
+            pre_retry_command: echo "retrying RETRY RETRY"
+            # github_token: $TOKEN
