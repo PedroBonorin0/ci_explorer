@@ -1,34 +1,23 @@
-name: Trigger action
+name: Retry failing step
 
 on:
   workflow_dispatch:
 
 jobs:
-  echo:
+  simulate-failure:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Run index.js
-        run: echo "Print print <====> printed"
 
-  fail:
-    needs: [echo]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: errored
-        run: exit 1
-      - name: Print message if we not failed
-        run: echo "Should not get here"
-
-  retry:
-    needs: [fail]
-    if: failure()
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: Wandalen/wretry.action@master
+      - name: Simulate failure and retry
+        uses: Wandalen/wretry.action@master
         with:
-          action: PedroBonorin0/ci_explorer/.github/workflows/main.yml@master
-          with: |
-            pre_retry_command: echo "retrying RETRY RETRY"
-            # github_token: $TOKEN
+          command: |
+            echo "Trying command..."
+            exit 1
+          attempt_limit: 3
+          attempt_delay: 1000
+          
+      - name: This will not run if above keeps failing
+        run: echo "Made it past retries!"
