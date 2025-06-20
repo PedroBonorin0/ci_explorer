@@ -2,28 +2,27 @@ name: Trigger action
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Choose environment to delete automation data'
-        required: true
-        type: choice
-        options:
-          - staging
-          - preprod
-
-env:
-  SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
 
 jobs:
-  install:
+  echo:
     runs-on: ubuntu-22.04
-    environment: 
-      name: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run index.js
-        run: node index.js
-        env:
-          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
+        run: echo "Print print <====> printed"
+
+  fail:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: errored
+        run: exit 1
+      - name: Print message if we not failed
+        run: echo "Should not get here"
+
+  retry:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: Wandalen/wretry.action@master
+        with:
+          action: PedroBonorin0/ci_explorer@master
