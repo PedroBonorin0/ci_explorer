@@ -23,6 +23,7 @@ jobs:
 
   retry:
     needs: [fail]
+    if: failure()
     runs-on: ubuntu-22.04
     steps:
       - uses: Wandalen/wretry.action@master
