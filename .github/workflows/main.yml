@@ -13,6 +13,7 @@ jobs:
         run: echo "Print print <====> printed"
 
   fail:
+    needs: [echo]
     runs-on: ubuntu-22.04
     steps:
       - name: errored
@@ -21,6 +22,7 @@ jobs:
         run: echo "Should not get here"
 
   retry:
+    needs: [fail]
     runs-on: ubuntu-22.04
     steps:
       - uses: Wandalen/wretry.action@master
