@@ -1,0 +1,25 @@
+name: Auto Retry Deployment Wrapper
+
+on:
+  workflow_run:
+    workflows: ["Deploy App"]
+    types:
+      - completed
+
+jobs:
+  retry:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Retry Deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflow_id = 'main.yml';
+            const ref = 'main';
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id,
+              ref
+            });
