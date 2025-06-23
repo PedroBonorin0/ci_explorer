@@ -1,23 +1,36 @@
-name: Retry failing step
+name: Deploy App
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Retry Deployment on Failure"]
+    types:
+      - completed
 
 jobs:
-  simulate-failure:
-    runs-on: ubuntu-22.04
+  step-1:
+    name: 'Step 1'
+    runs-on: ubuntu@latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: echo someting
+        run: echo "ECHO 1"
 
-      - name: Simulate failure and retry
-        uses: Wandalen/wretry.action@master
-        with:
-          command: |
-            echo "Trying command..."
+  deploy:
+    name: 'Step 2 - Failure'
+    runs-on: ubuntu@latest
+    needs: [step-1]
+    steps:
+      - name: fail job
+        run: exit 1
+
+  step-3-retry:
+    needs: [deploy]
+    name: 'Step 3 - Retry'
+    runs-on: ubuntu@latest
+    if: ${{ always() }}
+    steps:
+      - name: Fail if deploy failed
+        run: |
+          if [[ "${{ needs.deploy.result }}" != "success" ]]; then
+            echo "Deployment failed, retrying..."
             exit 1
-          attempt_limit: 3
-          attempt_delay: 1000
-          
-      - name: This will not run if above keeps failing
-        run: echo "Made it past retries!"
+          fi
