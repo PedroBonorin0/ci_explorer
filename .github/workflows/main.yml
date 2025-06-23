@@ -1,10 +1,7 @@
 name: Deploy App
 
 on:
-  workflow_run:
-    workflows: ["Retry Deployment on Failure"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   step-1:
