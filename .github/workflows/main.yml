@@ -1,33 +1,20 @@
-name: Deploy App
+name: Deploy
 
 on:
   workflow_dispatch:
 
 jobs:
-  step-1:
-    name: 'Step 1'
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo someting
-        run: echo "ECHO 1"
-
   deploy:
-    name: 'Step 2 - Failure'
     runs-on: ubuntu-latest
-    needs: [step-1]
     steps:
-      - name: fail job
-        run: exit 1
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  step-3-retry:
-    needs: [deploy]
-    name: 'Step 3 - Retry'
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    steps:
-      - name: Fail if deploy failed
+      - name: print
+        run: echo "HAHAHAHA"
+
+      - name: Deploy
         run: |
-          if [[ "${{ needs.deploy.result }}" != "success" ]]; then
-            echo "Deployment failed, retrying..."
-            exit 1
-          fi
+          echo "Deploying..."
+          # Simulate failure
+          exit 1
