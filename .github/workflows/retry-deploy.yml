@@ -1,59 +1,19 @@
-name: Retry Deploy
+name: Retry Deploy on Failure
 
 on:
   workflow_run:
-    workflows: ["Deploy"]
+    workflows: ["Deploy"] # Name of main workflow
     types:
       - completed
 
 jobs:
-  retry-if-failed:
-    if: ${{ github.event.workflow_run.conclusion != 'success' }}
+  retry:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-
-      - name: Clone repo and checkout tag
-        run: |
-          git clone https://github.com/${{ github.repository }} repo
-          cd repo
-
-          TAG="${{ github.event.workflow_run.head_branch }}"
-          echo "Retrying tag: $TAG"
-
-          git checkout tags/$TAG -b retry-branch
-
-          # Initialize retry counter file if missing
-          RETRY_FILE=".deploy-retry-count.txt"
-          if [ ! -f "$RETRY_FILE" ]; then
-            echo 1 > "$RETRY_FILE"
-          else
-            COUNT=$(cat "$RETRY_FILE")
-            COUNT=$((COUNT + 1))
-            echo "$COUNT" > "$RETRY_FILE"
-          fi
-
-          RETRY_COUNT=$(cat "$RETRY_FILE")
-          echo "Retry count is $RETRY_COUNT"
-
-          if [ "$RETRY_COUNT" -gt 3 ]; then
-            echo "Retry limit reached. Not retrying again."
-            exit 0
-          fi
-
-          echo "Retry attempt #$RETRY_COUNT"
-
-          echo "retry at $(date)" >> .retry_log.txt
-          git add .retry_log.txt "$RETRY_FILE"
-          git commit -m "Retry #$RETRY_COUNT at $(date)"
-          git tag -f "$TAG"
-          git push origin "$TAG" --force
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger workflow again
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          event-type: retry-deploy
+          repository: PedroBonorin0/ci_explorer/.github/workflows/main.yml@main
