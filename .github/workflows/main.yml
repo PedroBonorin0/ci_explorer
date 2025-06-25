@@ -1,12 +1,8 @@
 name: Deploy
 
 on:
-  workflow_dispatch:
-      inputs:
-        retry:
-          description: 'Retry count'
-          required: false
-          default: '0'
+  repository_dispatch:
+    types: [retry-deploy]
 
   push:
     tags:
