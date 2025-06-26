@@ -14,6 +14,6 @@ jobs:
       - name: Trigger workflow again
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.TRIGGER_PAT }}
           event-type: retry-deploy
           repository: PedroBonorin0/ci_explorer/.github/workflows/main.yml@main
