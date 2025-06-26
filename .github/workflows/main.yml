@@ -24,6 +24,10 @@ jobs:
       - name: Deploy
         run: |
           echo "Deploying..."
-          # Simulate failure
-          exit 1
+          if [ $((RANDOM % 2)) -eq 0 ]; then
+            echo "Deployment failed!"
+            exit 1
+          else
+            echo "Deployment succeeded!"
+          fi
           
