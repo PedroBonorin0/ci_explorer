@@ -1,0 +1,50 @@
+name: Trigger Cypress Tests
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  - uses: dorny/paths-filter@v3
+    id: changes
+    with:
+      filters: |
+        data-collection:
+          - 'src/pages/components/Tabs/DataCollectionTab/**'
+        evidence:
+          - 'src/pages/components/Tabs/EvidenceTab/**'  
+        contract
+          - 'src/pages/contract-creation/**'
+        map
+          - 'src/pages/map/**'
+
+  - if: steps.changes.outputs.data-collection == 'true'
+    uses: ./.github/workflows/main.yml@main
+    with:
+      test-group: Data-Collection
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  - if: steps.changes.outputs.evidence == 'true'
+    uses: ./.github/workflows/main.yml@main
+    with:
+      test-group: Evidence
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  - if: steps.changes.outputs.contract == 'true'
+    uses: ./.github/workflows/main.yml@main
+    with:
+      test-group: Contract
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  - if: steps.changes.outputs.map == 'true'
+    uses: ./.github/workflows/main.yml@main
+    with:
+      test-group: Map
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

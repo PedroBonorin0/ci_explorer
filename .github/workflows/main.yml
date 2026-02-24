@@ -1,33 +1,48 @@
-name: Deploy
+name: Cypress Tests
 
 on:
-  repository_dispatch:
-    types: [retry-deploy]
+  workflow_dispatch: # Wouldnt be necessary in a workflow call but is necessary for manual trigger
+    inputs:
+      test-group:
+        description: "Group of tests that should run"
+        required: true
+        type: choice
+        default: ALL
+        options:
+          - ALL
+          - Lead-management
+          - Estimate
+          - Contract
+          - Field-boundaries
+          - Producer-profile
+          - Lead-evidences
+          - Soc-report
+          - Data-collection
+          - Modeling
 
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      test-group:
+        description: "Group of tests that should run"
+        required: true
+        type: choice
+        default: ALL
+        options:
+          - ALL
+          - Lead-management
+          - Estimate
+          - Contract
+          - Field-boundaries
+          - Producer-profile
+          - Lead-evidences
+          - Soc-report
+          - Data-collection
+          - Modeling
 
 jobs:
-  deploy:
+  cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: print
-        run: echo "Deploying terraform"
-
-      - name: print
-        run: echo "Deploying changes"
-
-      - name: Deploy
+      - name: Execute Cypress Suite
         run: |
-          echo "Deploying..."
-          if [ $((RANDOM % 2)) -eq 0 ]; then
-            echo "Deployment failed!"
-            exit 1
-          else
-            echo "Deployment succeeded!"
-          fi
-          
+          echo "Starting cypress tests suite for group: ${{ inputs.group || 'Folder 1' }}"
