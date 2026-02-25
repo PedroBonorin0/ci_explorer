@@ -20,9 +20,9 @@ jobs:
               - 'src/pages/components/Tabs/DataCollectionTab/**'
             evidence:
               - 'src/pages/components/Tabs/EvidenceTab/**'
-            contract
+            contract:
               - 'src/pages/contract-creation/**'
-            map
+            map:
               - 'src/pages/map/**'
 
       - if: steps.changes.outputs.data-collection == 'true'
