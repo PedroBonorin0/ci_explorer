@@ -1,11 +1,9 @@
 name: Trigger Cypress Tests
 
 on:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
+  pull_request:
+    branches:
+      - master
 
 jobs:
   tests:
@@ -18,7 +16,7 @@ jobs:
             data-collection:
               - 'src/pages/components/Tabs/DataCollectionTab/**'
             evidence:
-              - 'src/pages/components/Tabs/EvidenceTab/**'  
+              - 'src/pages/components/Tabs/EvidenceTab/**'
             contract
               - 'src/pages/contract-creation/**'
             map
@@ -27,27 +25,27 @@ jobs:
       - if: steps.changes.outputs.data-collection == 'true'
         uses: ./.github/workflows/main.yml@main
         with:
-          test-group: Data-Collection
+          test-group: "Data-Collection"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.evidence == 'true'
         uses: ./.github/workflows/main.yml@main
         with:
-          test-group: Evidence
+          test-group: "Evidence"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.contract == 'true'
         uses: ./.github/workflows/main.yml@main
         with:
-          test-group: Contract
+          test-group: "Contract"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.map == 'true'
         uses: ./.github/workflows/main.yml@main
         with:
-          test-group: Map
+          test-group: "Map"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
