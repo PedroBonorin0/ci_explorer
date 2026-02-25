@@ -3,7 +3,7 @@ name: Main
 on:
   workflow_dispatch: # Wouldnt be necessary in a workflow call but is necessary for manual trigger
     inputs:
-      test-group:
+      group:
         description: "Group of tests that should run"
         required: true
         default: "ALL"
@@ -22,7 +22,7 @@ on:
 
   workflow_call:
     inputs:
-      test-group:
+      group:
         description: "Group of tests that should run"
         required: true
         type: string

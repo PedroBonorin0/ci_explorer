@@ -26,29 +26,29 @@ jobs:
               - 'src/pages/map/**'
 
       - if: steps.changes.outputs.data-collection == 'true'
-        uses: ./.github/workflows/main.yml@master
+        uses: ./.github/workflows/main.yml
         with:
-          test-group: "Data-Collection"
+          group: "Data-Collection"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.evidence == 'true'
-        uses: ./.github/workflows/main.yml@master
+        uses: ./.github/workflows/main.yml
         with:
-          test-group: "Evidence"
+          group: "Evidence"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.contract == 'true'
-        uses: ./.github/workflows/main.yml@master
+        uses: ./.github/workflows/main.yml
         with:
-          test-group: "Contract"
+          group: "Contract"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.map == 'true'
-        uses: ./.github/workflows/main.yml@master
+        uses: ./.github/workflows/main.yml
         with:
-          test-group: "Map"
+          group: "Map"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
