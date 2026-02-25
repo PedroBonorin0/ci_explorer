@@ -8,6 +8,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - uses: dorny/paths-filter@v3
         id: changes
