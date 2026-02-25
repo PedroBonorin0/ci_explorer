@@ -1,5 +1,5 @@
 const DC = () => {
-  console.log('change 2');
+  console.log('change');
   return null;
 };
 
