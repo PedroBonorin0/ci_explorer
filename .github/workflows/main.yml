@@ -25,19 +25,7 @@ on:
       test-group:
         description: "Group of tests that should run"
         required: true
-        default: "ALL"
-        type: choice
-        options:
-          - ALL
-          - Lead-management
-          - Estimate
-          - Contract
-          - Field-boundaries
-          - Producer-profile
-          - Lead-evidences
-          - Soc-report
-          - Data-collection
-          - Modeling
+        type: string
 
 jobs:
   cypress-run:
