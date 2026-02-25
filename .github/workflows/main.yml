@@ -1,4 +1,4 @@
-name: Cypress Tests
+name: Main
 
 on:
   workflow_dispatch: # Wouldnt be necessary in a workflow call but is necessary for manual trigger
