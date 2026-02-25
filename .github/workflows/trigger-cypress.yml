@@ -6,10 +6,15 @@ on:
       - master
 
 jobs:
-  tests:
+  detect-changes:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+    outputs:
+      data-collection: ${{ steps.changes.outputs.data-collection }}
+      evidence: ${{ steps.changes.outputs.evidence }}
+      contract: ${{ steps.changes.outputs.contract }}
+      map: ${{ steps.changes.outputs.map }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -25,30 +30,34 @@ jobs:
             map:
               - 'src/pages/map/**'
 
-      - if: steps.changes.outputs.data-collection == 'true'
-        uses: ./.github/workflows/main.yml
-        with:
-          group: "Data-Collection"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  data-collection-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.data-collection == 'true'
+    uses: ./.github/workflows/main.yml
+    with:
+      group: "Data-Collection"
+    secrets: inherit
 
-      - if: steps.changes.outputs.evidence == 'true'
-        uses: ./.github/workflows/main.yml
-        with:
-          group: "Evidence"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  evidence-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.evidence == 'true'
+    uses: ./.github/workflows/main.yml
+    with:
+      group: "Evidence"
+    secrets: inherit
 
-      - if: steps.changes.outputs.contract == 'true'
-        uses: ./.github/workflows/main.yml
-        with:
-          group: "Contract"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  contract-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.contract == 'true'
+    uses: ./.github/workflows/main.yml
+    with:
+      group: "Contract"
+    secrets: inherit
 
-      - if: steps.changes.outputs.map == 'true'
-        uses: ./.github/workflows/main.yml
-        with:
-          group: "Map"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  map-tests:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.map == 'true'
+    uses: ./.github/workflows/main.yml
+    with:
+      group: "Map"
+    secrets: inherit
