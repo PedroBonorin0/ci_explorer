@@ -3,7 +3,7 @@ name: Trigger Cypress Tests
 on:
   push:
     branches:
-      -
+      - master
 
 jobs:
   tests:
@@ -26,28 +26,28 @@ jobs:
               - 'src/pages/map/**'
 
       - if: steps.changes.outputs.data-collection == 'true'
-        uses: ./.github/workflows/main.yml
+        uses: ./.github/workflows/main.yml@master
         with:
           test-group: "Data-Collection"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.evidence == 'true'
-        uses: ./.github/workflows/main.yml
+        uses: ./.github/workflows/main.yml@master
         with:
           test-group: "Evidence"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.contract == 'true'
-        uses: ./.github/workflows/main.yml
+        uses: ./.github/workflows/main.yml@master
         with:
           test-group: "Contract"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: steps.changes.outputs.map == 'true'
-        uses: ./.github/workflows/main.yml
+        uses: ./.github/workflows/main.yml@master
         with:
           test-group: "Map"
         env:
